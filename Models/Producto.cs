@@ -1,14 +1,14 @@
-﻿namespace Ejemplo1.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Ejemplo1.Models
 {
     public class Producto
     {
+        [ Key ]
         public int IdProducto { get; set; }
+        [ Required ]
         public string Nombre { get; set; }
-
         public string Descripcion { get; set; }
-
         public int cantidad { get; set; }
-
-       
     }
 }
