@@ -2,16 +2,30 @@
 using Microsoft.AspNetCore.Mvc;
 using Ejemplo1.Utils;
 using Ejemplo1.Models;
+using System.Net.Http.Headers;
+using System.IO;
 
 namespace Ejemplo1.Controllers
 {
     public class ProductoController : Controller
     {
+        static HttpClient client = new HttpClient();
+        string baseURL = "http://localhost:5129/api/Producto";
         // GET: ProductoController
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-
-            return View(Utils.Utils.ListaProductos);
+            client.BaseAddress = new Uri("http://localhost:5129/api/Producto");
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
+            //
+            List<Producto> productos = null;
+            HttpResponseMessage response = await client.GetAsync(baseURL);
+            if (response.IsSuccessStatusCode)
+            {
+                productos = await response.Content.ReadAsAsync<List<Producto>>();
+            }
+            return View(productos);
         }
 
         // GET: ProductoController/Details/5
