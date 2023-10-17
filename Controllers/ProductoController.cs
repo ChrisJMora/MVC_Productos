@@ -69,50 +69,39 @@ namespace Ejemplo1.Controllers
             return View();
         }
 
-
-
-        // GET: ProductoController/Edit/5
-        public IActionResult Edit(int IdProducto)
+        // GET: ProductoController/Edit
+        public async Task<IActionResult> Edit(int IdProducto)
         {
-            Producto producto = Utils.Utils.ListaProductos.Find(x => x.IdProducto == IdProducto);
-            if (producto != null)
+            Producto? producto = null;
+            HttpResponseMessage response = await client.GetAsync("http://localhost:5129/api/Producto/" + IdProducto);
+            if (response.IsSuccessStatusCode)
             {
+                producto = await response.Content.ReadAsAsync<Producto>();
                 return View(producto);
             }
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public IActionResult Edit(Producto producto)
+        public async Task<IActionResult> Edit(Producto producto)
         {
-            Producto producto2 = Utils.Utils.ListaProductos.Find(x => x.IdProducto == producto.IdProducto);
-            if (producto2 != null)
+            HttpResponseMessage response = await client.PutAsJsonAsync(
+        $"http://localhost:5129/api/Producto/{producto.IdProducto}", producto);
+            response.EnsureSuccessStatusCode();
+            if (response.IsSuccessStatusCode)
             {
-                producto2.Nombre=producto.Nombre;
-                producto2.Descripcion = producto.Descripcion;
-                producto2.cantidad=producto.cantidad;
-
                 return RedirectToAction("Index");
             }
             return View();
         }
 
-
-
-
-        // GET: ProductoController/Delete/5
-        public IActionResult Delete(int IdProducto)
+        // GET: ProductoController/Delete
+        public async Task<IActionResult> Delete(int IdProducto)
         {
-            Producto producto2 = Utils.Utils.ListaProductos.Find(x => x.IdProducto == IdProducto);
-            if (producto2 != null)
-            {
-                Utils.Utils.ListaProductos.Remove(producto2);
-                return RedirectToAction("Index");
-            }
+            HttpResponseMessage response = await client.DeleteAsync(
+        $"http://localhost:5129/api/Producto/{IdProducto}");
             return RedirectToAction("Index");
         }
 
-     
-       
     }
 }
