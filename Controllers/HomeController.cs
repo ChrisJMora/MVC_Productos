@@ -8,6 +8,8 @@ namespace Ejemplo1.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
+        string baseURL = "";
+
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
