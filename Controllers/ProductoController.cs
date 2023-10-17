@@ -9,18 +9,28 @@ namespace Ejemplo1.Controllers
 {
     public class ProductoController : Controller
     {
+
         static HttpClient client = new HttpClient();
-        string baseURL = "http://localhost:5129/api/Producto";
-        // GET: ProductoController
-        public async Task<IActionResult> Index()
+
+        static void Main()
         {
+            RunAsync().GetAwaiter().GetResult();
+        }
+
+        static async Task RunAsync()
+        {
+            // Update port # in the following line.
             client.BaseAddress = new Uri("http://localhost:5129/api/Producto");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
-            //
-            List<Producto> productos = null;
-            HttpResponseMessage response = await client.GetAsync(baseURL);
+        }
+
+        // GET: ProductoController
+        public async Task<IActionResult> Index()
+        {
+            List<Producto>? productos = null;
+            HttpResponseMessage response = await client.GetAsync("http://localhost:5129/api/Producto");
             if (response.IsSuccessStatusCode)
             {
                 productos = await response.Content.ReadAsAsync<List<Producto>>();
@@ -28,12 +38,14 @@ namespace Ejemplo1.Controllers
             return View(productos);
         }
 
-        // GET: ProductoController/Details/5
-        public IActionResult Details(int IdProducto)
+        // GET: ProductoController/Details
+        public async Task<IActionResult> Details(int IdProducto)
         {
-            Producto producto = Utils.Utils.ListaProductos.Find(x => x.IdProducto == IdProducto);
-            if (producto != null)
+            Producto? producto = null;
+            HttpResponseMessage response = await client.GetAsync("http://localhost:5129/api/Producto/" + IdProducto);
+            if (response.IsSuccessStatusCode)
             {
+                producto = await response.Content.ReadAsAsync<Producto>();
                 return View(producto);
             }
             return RedirectToAction("Index");
@@ -46,12 +58,15 @@ namespace Ejemplo1.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Producto producto)
+        public async Task<IActionResult> Create(Producto producto)
         {
-            int i = Utils.Utils.ListaProductos.Count() + 1;
-            producto.IdProducto = i;
-            Utils.Utils.ListaProductos.Add(producto);
-            return RedirectToAction("Index");
+            HttpResponseMessage response = await client.PostAsJsonAsync("http://localhost:5129/api/Producto", producto);
+            response.EnsureSuccessStatusCode();
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index");
+            }
+            return View();
         }
 
 
