@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Ejemplo1.Utils;
 using Ejemplo1.Models;
 using System.Net.Http.Headers;
 using System.IO;
