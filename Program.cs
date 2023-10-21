@@ -1,12 +1,11 @@
+using Ejemplo1.Models;
 using MVC_Productos.API_Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-API_Service api_service = new API_Service();
-api_service.ID = "123456789";
-Console.WriteLine(api_service.ID);
+API_Service<Producto>.Instacia().Run();
 
 var app = builder.Build();
 
