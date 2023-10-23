@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-API_Service<Producto>.Instacia().Run();
+API_Service<Producto>.Instacia();
 
 var app = builder.Build();
 

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Net.Http.Headers;
 
 namespace MVC_Productos.API_Service
 {
@@ -12,9 +11,6 @@ namespace MVC_Productos.API_Service
 
         private string _url = "http://localhost:5129/api/Producto";
         
-        //Propiedades
-        public string URL { get { return _url; } set {  _url = value; } }
-        
         //Constructor
         private API_Service() { }
 
@@ -26,15 +22,6 @@ namespace MVC_Productos.API_Service
                 _instancia = new API_Service<T>();
             }
             return _instancia;
-        }
-
-        public void Run()
-        {
-            // Update port # in the following line.
-            client.BaseAddress = new Uri(_url);
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         public async Task<bool> Post(T entity)
